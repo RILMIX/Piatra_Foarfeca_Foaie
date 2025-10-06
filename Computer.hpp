@@ -1,23 +1,23 @@
-#pragma once
+﻿#pragma once
 
 #include <cstdlib>
-#include "choice.hpp"
+#include "Choice.hpp"
 
-class Computer {
+class Bot {
 private:
-    Choice currentChoice;
+    Choice selectedOption;
 
 public:
-    void pickRandomChoice() {
-        int randomValue = std::rand() % 3;  // 0, 1 sau 2
-        currentChoice = static_cast<Choice>(randomValue);
+    void randomizeChoice() {
+        int randomNum = std::rand() % 3; // generează 0, 1 sau 2
+        selectedOption = static_cast<Choice>(randomNum);
     }
 
-    Choice getCurrentChoice() const {
-        return currentChoice;
+    Choice getSelectedOption() const {
+        return selectedOption;
     }
 
-    int asInt() const {
-        return static_cast<int>(currentChoice);
+    int toInt() const {
+        return static_cast<int>(selectedOption);
     }
 };
