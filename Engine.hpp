@@ -1,46 +1,44 @@
 ﻿#pragma once
 
 #include <iostream>
-#include "player.hpp"
-#include "computer.hpp"
-#include "choice.hpp"
+#include "Player.hpp"
+#include "Computer.hpp"
+#include "Choice.hpp"
 
-class GameEngine {
+class GameCore {
 private:
     Player& human;
-    Computer& ai;
+    Computer& bot;
 
 public:
-    GameEngine(Player& p, Computer& c) : human(p), ai(c) {}
+    GameCore(Player& p, Computer& c) : human(p), bot(c) {}
 
-    void start() {
-        human.chooseOption();
-        ai.pickRandomChoice();
-        std::cout << "\nTu ai ales: " << choiceToString(human.getSelectedChoice())
-            << "\nComputerul a ales: " << choiceToString(ai.getCurrentChoice())
-            << "\nRezultat: " << determineOutcome() << "\n";
+    void startGame() {
+        human.choose();
+        bot.pickRandomChoice();
+
+        std::cout << "Tu ai ales: " << choiceToString(human.getSelected())
+            << ", iar calculatorul a ales: " << choiceToString(bot.getCurrentChoice())
+            << ".\nRezultat: " << getResult(human.getSelected(), bot.getCurrentChoice()) << "\n";
     }
 
 private:
     static std::string choiceToString(Choice c) {
         switch (c) {
-        case ROCK:     return "Rock";
-        case PAPER:    return "Paper";
-        case SCISSORS: return "Scissors";
-        default:       return "Unknown";
+        case ROCK: return "Piatră";
+        case PAPER: return "Hârtie";
+        case SCISSORS: return "Foarfecă";
+        default: return "Necunoscut";
         }
     }
 
-    std::string determineOutcome() const {
-        Choice playerChoice = human.getSelectedChoice();
-        Choice computerChoice = ai.getCurrentChoice();
-
+    static std::string getResult(Choice playerChoice, Choice computerChoice) {
         if (playerChoice == computerChoice)
             return "Egalitate!";
         if ((playerChoice == ROCK && computerChoice == SCISSORS) ||
             (playerChoice == PAPER && computerChoice == ROCK) ||
             (playerChoice == SCISSORS && computerChoice == PAPER))
             return "Ai câștigat!";
-        return "Computerul a câștigat!";
+        return "Calculatorul a câștigat!";
     }
 };
