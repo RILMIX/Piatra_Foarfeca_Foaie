@@ -16,5 +16,5 @@ int main() {
     game.run();
 
     std::cout << "\nMultumim ct ai jucat!\n";
-    return 0;
+    return 0; 
 }
