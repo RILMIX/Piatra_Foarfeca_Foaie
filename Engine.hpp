@@ -16,11 +16,11 @@ public:
 
     void run() {
         human.choose();
-        bot.getCurrentChoice();
+        bot.pickRandomChoice();
 
         std::cout << "Tu ai ales: " << choiceToString(human.getSelected())
-            << ", iar calculatorul a ales: " << choiceToString(bot.getCurrentChoice())
-            << ".\nRezultat: " << getResult(human.getSelected(), bot.getCurrentChoice()) << "\n";
+            << ", iar calculatorul a ales: " << choiceToString(bot.pickRandomChoice())
+            << ".\nRezultat: " << getResult(human.getSelected(), bot.pickRandomChoice()) << "\n";
     }
 
 private:
