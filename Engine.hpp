@@ -6,7 +6,7 @@
 #include "Choice.hpp"
 #include <string>
 
-class Engine  {
+class Engine {
 private:
     Player human;
     Computer bot;
