@@ -7,7 +7,7 @@ class Computer {
 private:
     Choice selectedOption;
 
-public: 
+public:
     // Generează o alegere aleatoare (0, 1 sau 2)
     void pickRandomChoice() {
         int randomNum = std::rand() % 3;
