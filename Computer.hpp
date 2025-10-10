@@ -3,17 +3,18 @@
 #include <cstdlib>
 #include "Choice.hpp"
 
-class Bot {
+class Computer {
 private:
     Choice selectedOption;
 
 public:
-    void randomizeChoice() {
-        int randomNum = std::rand() % 3; // generează 0, 1 sau 2
+    // Generează o alegere aleatoare (0, 1 sau 2)
+    void pickRandomChoice() {
+        int randomNum = std::rand() % 3;
         selectedOption = static_cast<Choice>(randomNum);
     }
 
-    Choice getSelectedOption() const {
+    Choice getCurrentChoice() const {
         return selectedOption;
     }
 

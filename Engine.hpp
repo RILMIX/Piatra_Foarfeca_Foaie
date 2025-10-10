@@ -4,18 +4,19 @@
 #include "Player.hpp"
 #include "Computer.hpp"
 #include "Choice.hpp"
+#include <string>
 
-class GameCore {
+class Engine {
 private:
-    Player& human;
-    Computer& bot;
+    Player human;
+    Computer bot;
 
 public:
-    GameCore(Player& p, Computer& c) : human(p), bot(c) {}
+    Engine(Player& p, Computer& c) : human(p), bot(c) {}
 
-    void startGame() {
+    void run() {
         human.choose();
-        bot.pickRandomChoice();
+        bot.getCurrentChoice();
 
         std::cout << "Tu ai ales: " << choiceToString(human.getSelected())
             << ", iar calculatorul a ales: " << choiceToString(bot.getCurrentChoice())
@@ -25,9 +26,9 @@ public:
 private:
     static std::string choiceToString(Choice c) {
         switch (c) {
-        case ROCK: return "Piatră";
-        case PAPER: return "Hârtie";
-        case SCISSORS: return "Foarfecă";
+        case ROCK: return "Piatra";
+        case PAPER: return "Hartie";
+        case SCISSORS: return "Foarfec";
         default: return "Necunoscut";
         }
     }
@@ -38,7 +39,7 @@ private:
         if ((playerChoice == ROCK && computerChoice == SCISSORS) ||
             (playerChoice == PAPER && computerChoice == ROCK) ||
             (playerChoice == SCISSORS && computerChoice == PAPER))
-            return "Ai câștigat!";
-        return "Calculatorul a câștigat!";
+            return "Ai castigat!";
+        return "Calculatorul a castigat!";
     }
 };

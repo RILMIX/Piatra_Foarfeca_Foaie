@@ -1,31 +1,35 @@
-﻿@echo off
+﻿
+chcp 65001
+@echo off
+set CXX=cl.exe
+set CXXFLAGS=/EHsc /W4 /MD
 echo === Compilare joc Piatră-Hârtie-Foarfecă ===
 
 :: Compilăm fișierele sursă
-g++ -c player.cpp -o player.o
+%CXX% /c player.cpp /Foplayer.obj %CXXFLAGS%
 if errorlevel 1 goto fail
 
-g++ -c computer.cpp -o computer.o
+%CXX% /c computer.cpp /Focomputer.obj %CXXFLAGS%
 if errorlevel 1 goto fail
 
-g++ -c engine.cpp -o engine.o
+%CXX% /c engine.cpp /Foengine.obj %CXXFLAGS%
 if errorlevel 1 goto fail
 
-g++ -c main.cpp -o main.o
+%CXX% /c main.cpp /Fomain.obj %CXXFLAGS%
 if errorlevel 1 goto fail
 
 :: Legăm toate obiectele într-un executabil
-g++ player.o computer.o engine.o main.o -o game.exe
+%CXX% player.obj computer.obj engine.obj main.obj /Fegame.exe
 if errorlevel 1 goto fail
 
 echo -----------------------------
-echo Compilare reușită!
-echo Rulează „game.exe” pentru a începe jocul.
+echo Compilare reusita!
+echo Ruleaza „game.exe” pentru a incepe jocul.
 goto end
 
 :fail
 echo Eroare la compilare!
-echo Verifică fișierele sursă și încearcă din nou.
+echo Verifica fisierele sursa și incearca din nou.
 
 :end
 exit /b
