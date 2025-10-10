@@ -9,12 +9,12 @@ private:
 
 public:
     // Generează o alegere aleatoare (0, 1 sau 2)
-    void pickRandomChoice() {
+    void Chouse() {
         int randomNum = std::rand() % 3;
         selectedOption = static_cast<Choice>(randomNum);
     }
 
-    Choice pickRandomChoice() const {
+    Choice Chouse() const {
         return selectedOption;
     }
 
