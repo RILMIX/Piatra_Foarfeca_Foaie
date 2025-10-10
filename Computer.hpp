@@ -14,7 +14,7 @@ public:
         selectedOption = static_cast<Choice>(randomNum);
     }
 
-    Choice getCurrentChoice() const {
+    Choice pickRandomChoice() const {
         return selectedOption;
     }
 
