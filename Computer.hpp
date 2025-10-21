@@ -1,24 +1,9 @@
 ﻿#pragma once
-
-#include <cstdlib>
-#include "Choice.hpp"
+#include "choice.hpp"
 
 class Computer {
-private:
-    Choice selectedOption;
-
+    Choice opt;
 public:
-    // Generează o alegere aleatoare (0, 1 sau 2)
-    void Chouse() {
-        int randomNum = std::rand() % 3;
-        selectedOption = static_cast<Choice>(randomNum);
-    }
-
-    Choice Chouse() const {
-        return selectedOption;
-    }
-
-    int toInt() const {
-        return static_cast<int>(selectedOption);
-    }
+    void pick();
+    Choice get() const;
 };
