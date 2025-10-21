@@ -1,26 +1,46 @@
 ﻿#pragma once
 
 #include <iostream>
+#include <string>
 #include "Player.hpp"
 #include "Computer.hpp"
 #include "Choice.hpp"
-#include <string>
 
 class Engine {
 private:
-    Player human;
-    Computer bot;
+    Player& human;
+    Computer& bot;
 
 public:
     Engine(Player& p, Computer& c) : human(p), bot(c) {}
 
     void run() {
+        // Jucătorul își alege opțiunea
         human.choose();
+
+        // Calculatorul generează aleatoriu o alegere
         bot.Chouse();
 
-        std::cout << "Tu ai ales: " << choiceToString(human.getSelected())
-            << ", iar calculatorul a ales: " << choiceToString(bot.Chouse())
-            << ".\nRezultat: " << getResult(human.getSelected(), bot.Chouse()) << "\n";
+        // Afișăm ambele alegeri într-un mod clar
+        std::cout << "Tu ai ales " << choiceToString(human.getSelected());
+        std::cout << ", iar calculatorul a ales " << choiceToString(bot.getChoice()) << ". ";
+
+        // Determinăm rezultatul jocului
+        if (human.getSelected() == bot.getChoice()) {
+            std::cout << "Rezultat: Egalitate!\n";
+        }
+        else if (
+            (human.getSelected() == ROCK && bot.getChoice() == SCISSORS) ||
+            (human.getSelected() == PAPER && bot.getChoice() == ROCK) ||
+            (human.getSelected() == SCISSORS && bot.getChoice() == PAPER)
+            ) {
+            std::cout << "Rezultat: Ai câștigat!\n";
+        }
+        else {
+            std::cout << "Rezultat: Calculatorul a câștigat!\n";
+        }
+
+        std::cout << std::endl;
     }
 
 private:
@@ -28,18 +48,8 @@ private:
         switch (c) {
         case ROCK: return "Piatra";
         case PAPER: return "Hartie";
-        case SCISSORS: return "Foarfec";
+        case SCISSORS: return "Foarfeca";
         default: return "Necunoscut";
         }
-    }
-
-    static std::string getResult(Choice playerChoice, Choice computerChoice) {
-        if (playerChoice == computerChoice)
-            return "Egalitate!";
-        if ((playerChoice == ROCK && computerChoice == SCISSORS) ||
-            (playerChoice == PAPER && computerChoice == ROCK) ||
-            (playerChoice == SCISSORS && computerChoice == PAPER))
-            return "Ai castigat!";
-        return "Calculatorul a castigat!";
     }
 };
