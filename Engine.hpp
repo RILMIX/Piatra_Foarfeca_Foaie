@@ -8,48 +8,51 @@
 
 class Engine {
 private:
-    Player& human;
+    // Păstrăm numele tale, dar le definim invers (Computer, Player)
     Computer& bot;
+    Player& human;
 
 public:
+    // Păstrăm constructorul tău
     Engine(Player& p, Computer& c) : human(p), bot(c) {}
 
     void run() {
-        // Jucătorul își alege opțiunea
         human.choose();
+        bot.pick(); // Presupunând că ai ales 'pick()' din discuția anterioară
 
-        // Calculatorul generează aleatoriu o alegere
-        bot.Chouse();
+        std::cout << "Tu ai ales ";
+        // Folosim switch, similar cu prietenul, dar păstrăm mesajul tău în română
+        switch (human.getSelected()) {
+        case ROCK: std::cout << "Piatra"; break;
+        case PAPER: std::cout << "Hartie"; break;
+        case SCISSORS: std::cout << "Foarfeca"; break;
+        }
 
-        // Afișăm ambele alegeri într-un mod clar
-        std::cout << "Tu ai ales " << choiceToString(human.getSelected());
-        std::cout << ", iar calculatorul a ales " << choiceToString(bot.getChoice()) << ". ";
+        std::cout << ", iar calculatorul a ales ";
+        switch (bot.get()) { // Folosim get() conform fisierului Computer.hpp anterior
+        case ROCK: std::cout << "Piatra"; break;
+        case PAPER: std::cout << "Hartie"; break;
+        case SCISSORS: std::cout << "Foarfeca"; break;
+        }
+        std::cout << ". ";
 
-        // Determinăm rezultatul jocului
-        if (human.getSelected() == bot.getChoice()) {
-            std::cout << "Rezultat: Egalitate!\n";
+        // Logica de determinare a rezultatului (păstrată identic)
+        Choice player_choice = human.getSelected(); // Variabilă locală pentru citire mai ușoară
+        Choice bot_choice = bot.get();
+
+        if (player_choice == bot_choice) {
+            std::cout << "Rezultat: Egalitate! (TIE)\n";
         }
         else if (
-            (human.getSelected() == ROCK && bot.getChoice() == SCISSORS) ||
-            (human.getSelected() == PAPER && bot.getChoice() == ROCK) ||
-            (human.getSelected() == SCISSORS && bot.getChoice() == PAPER)
+            (player_choice == ROCK && bot_choice == SCISSORS) ||
+            (player_choice == PAPER && bot_choice == ROCK) ||
+            (player_choice == SCISSORS && bot_choice == PAPER)
             ) {
-            std::cout << "Rezultat: Ai câștigat!\n";
+            std::cout << "Rezultat: Ai câștigat! (WIN)\n";
         }
         else {
-            std::cout << "Rezultat: Calculatorul a câștigat!\n";
+            std::cout << "Rezultat: Calculatorul a câștigat! (LOSS)\n";
         }
-
-        std::cout << std::endl;
-    }
-
-private:
-    static std::string choiceToString(Choice c) {
-        switch (c) {
-        case ROCK: return "Piatra";
-        case PAPER: return "Hartie";
-        case SCISSORS: return "Foarfeca";
-        default: return "Necunoscut";
-        }
+        std::cout << "\n";
     }
 };

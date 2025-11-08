@@ -14,6 +14,7 @@ public:
     Player();
     Player(const std::string& name, Choice choice);
     Player(const Player& other);
+
     Player& operator=(const Player& other);
 
     bool operator==(const Player& other) const;
@@ -27,5 +28,7 @@ public:
     void choose();
     Choice getSelected() const;
     void showChoice() const;
+
+    static void showSTLDemos();
+    static void showSmartPointers();
 };
-    

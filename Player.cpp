@@ -1,6 +1,9 @@
 #include "Player.hpp"
 #include <limits>
 #include <iostream>
+#include <vector>
+#include <algorithm>
+#include <memory> 
 
 Player::Player() : name(""), selected(Choice::ROCK) {}
 
@@ -36,7 +39,6 @@ bool Player::operator<(const Player& other) const {
 bool Player::operator>(const Player& other) const {
     return other < *this;
 }
-
 std::istream& operator>>(std::istream& is, Player& player) {
     std::cout << "Introdu numele jucatorului: ";
     is >> player.name;
@@ -58,7 +60,6 @@ std::istream& operator>>(std::istream& is, Player& player) {
 
     return is;
 }
-
 std::ostream& operator<<(std::ostream& os, const Player& player) {
     os << "Jucator: " << player.name << ", Alegere: ";
     switch (player.selected) {
@@ -68,7 +69,6 @@ std::ostream& operator<<(std::ostream& os, const Player& player) {
     }
     return os;
 }
-
 void Player::choose() {
     int value = -1;
     while (true) {
@@ -99,4 +99,37 @@ void Player::showChoice() const {
     case SCISSORS: std::cout << "Foarfeca"; break;
     }
     std::cout << "\n";
+}
+void Player::showSTLDemos() { 
+    std::vector<Player> players = {
+        Player("Marius", Choice::ROCK),
+        Player("Andrei", Choice::PAPER),
+        Player("Ionut", Choice::SCISSORS)
+    };
+
+    std::sort(players.begin(), players.end());
+
+    std::cout << "\n--- Demo STL (Jucatori sortati dupa nume) ---\n";
+    for (const auto& p : players) {
+        std::cout << p << std::endl;
+    }
+    auto it = std::find_if(players.begin(), players.end(),
+        [](const Player& p) { return p.name == "Marius"; });
+    if (it != players.end()) {
+        std::cout << "Jucator gasit: " << *it << "\n";
+    }
+    std::cout << "------------------------------------------\n";
+}
+
+void Player::showSmartPointers() {
+    std::shared_ptr<Player> p1 = std::make_shared<Player>("Elena", Choice::PAPER);
+    std::shared_ptr<Player> p2 = std::make_shared<Player>("Alex", Choice::SCISSORS);
+
+    std::vector<std::shared_ptr<Player>> playerPtrs = { p1, p2 };
+
+    std::cout << "\n--- Demo Smart Pointers (shared_ptr) ---\n";
+    for (const auto& ptr : playerPtrs) {
+        std::cout << *ptr << "\n";
+    }
+    std::cout << "--------------------------------------\n";
 }

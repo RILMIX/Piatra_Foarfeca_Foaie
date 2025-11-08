@@ -7,13 +7,16 @@
 #include "Engine.hpp"
 
 int main() {
-    std::srand(static_cast<unsigned int>(std::time(nullptr))); // initializeaza generatorul random
+    std::srand(std::time(nullptr));
 
     Player human;
     Computer bot;
     Engine joc(human, bot);
 
     joc.run();
+
+    Player::showSTLDemos();
+    Player::showSmartPointers();
 
     return 0;
 }
