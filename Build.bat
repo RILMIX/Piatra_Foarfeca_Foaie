@@ -1,35 +1,31 @@
-﻿
-chcp 65001
-@echo off
+﻿@echo off
+chcp 65001 > nul
 set CXX=cl.exe
 set CXXFLAGS=/EHsc /W4 /MD
-echo === Compilare joc Piatră-Hârtie-Foarfecă ===
+set OUT_EXE=joc_rps.exe
+set "OBJS=player.obj computer.obj engine.obj main.obj"
 
-:: Compilăm fișierele sursă
-%CXX% /c player.cpp /Foplayer.obj %CXXFLAGS%
-if errorlevel 1 goto fail
+echo === Incepere Compilare C++ (cl.exe) ===
 
-%CXX% /c computer.cpp /Focomputer.obj %CXXFLAGS%
-if errorlevel 1 goto fail
+:: Compilare fisiere obiect
+%CXX% /c player.cpp /Foplayer.obj %CXXFLAGS% || goto fail
+%CXX% /c computer.cpp /Focomputer.obj %CXXFLAGS% || goto fail
+%CXX% /c engine.cpp /Foengine.obj %CXXFLAGS% || goto fail
+%CXX% /c main.cpp /Fomain.obj %CXXFLAGS% || goto fail
 
-%CXX% /c engine.cpp /Foengine.obj %CXXFLAGS%
-if errorlevel 1 goto fail
+:: Legare
+echo Legare...
+%CXX% %OBJS% /Fe%OUT_EXE% || goto fail
 
-%CXX% /c main.cpp /Fomain.obj %CXXFLAGS%
-if errorlevel 1 goto fail
-
-:: Legăm toate obiectele într-un executabil
-%CXX% player.obj computer.obj engine.obj main.obj /Fegame.exe
-if errorlevel 1 goto fail
-
-echo -----------------------------
-echo Compilare reusita!
-echo Ruleaza „game.exe” pentru a incepe jocul.
+:success
+echo.
+echo ✅ Compilare reușită! Rulează "%OUT_EXE%".
 goto end
 
 :fail
-echo Eroare la compilare!
-echo Verifica fisierele sursa și incearca din nou.
+echo.
+echo ❌ EROARE: Eșec la Construcție!
+echo Verificati log-ul compilatorului de mai sus.
 
 :end
 exit /b
