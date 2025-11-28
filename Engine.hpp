@@ -1,55 +1,64 @@
 ﻿#pragma once
 
 #include <iostream>
-#include <string>
+// Nu mai avem nevoie de <string> aici, deci o eliminăm pentru simplitate
 #include "Player.hpp"
 #include "Computer.hpp"
-#include "Choice.hpp"
+#include "Choice.hpp" // Presupunem că enum-ul Choice este definit aici
 
+// Această clasă gestionează logica jocului (cine alege, cine câștigă)
 class Engine {
 private:
-    Player& human;
-    Computer& bot;
+    // Folosim nume simple, directe, pentru a simplifica codul
+    Player& p_jucator;
+    Computer& c_calculator;
 
 public:
-    Engine(Player& p, Computer& c) : human(p), bot(c) {}
+    // Constructorul primește referințele la jucător și calculator
+    Engine(Player& p, Computer& c) : p_jucator(p), c_calculator(c) {}
 
+    // Funcția principală care rulează o rundă de joc
     void run() {
-        // Jucătorul își alege opțiunea
-        human.choose();
+        // 1. Jucătorii aleg
+        p_jucator.makeChoice(); // Am schimbat în 'makeChoice' pentru a fi consistent cu prietenul tău
+        c_calculator.generateChoice(); // Am schimbat în 'generateChoice' pentru a fi consistent cu prietenul tău
 
-        // Calculatorul generează aleatoriu o alegere
-        bot.Chouse();
+        // Obținem alegerile pentru a le compara
+        Choice alegere_jucator = p_jucator.getChoice(); // Presupunem că metoda de citire este getChoice()
+        Choice alegere_calculator = c_calculator.getChoice(); // Presupunem că metoda de citire este getChoice()
 
-        // Afișăm ambele alegeri într-un mod clar
-        std::cout << "Tu ai ales " << choiceToString(human.getSelected());
-        std::cout << ", iar calculatorul a ales " << choiceToString(bot.getChoice()) << ". ";
-
-        // Determinăm rezultatul jocului
-        if (human.getSelected() == bot.getChoice()) {
-            std::cout << "Rezultat: Egalitate!\n";
+        // 2. Afișăm alegerile
+        std::cout << "Tu ai ales ";
+        switch (alegere_jucator) {
+        case ROCK: std::cout << "Piatra"; break;
+        case PAPER: std::cout << "Hartie"; break;
+        case SCISSORS: std::cout << "Foarfeca"; break;
         }
+
+        std::cout << ", Calculatorul a ales ";
+        switch (alegere_calculator) {
+        case ROCK: std::cout << "Piatra"; break;
+        case PAPER: std::cout << "Hartie"; break;
+        case SCISSORS: std::cout << "Foarfeca"; break;
+        }
+        std::cout << " - ";
+
+        // 3. Determinăm rezultatul (Logică Rock, Paper, Scissors)
+        if (alegere_jucator == alegere_calculator) {
+            std::cout << "Egalitate!\n";
+        }
+        // Verificăm condițiile de câștig pentru Jucător
         else if (
-            (human.getSelected() == ROCK && bot.getChoice() == SCISSORS) ||
-            (human.getSelected() == PAPER && bot.getChoice() == ROCK) ||
-            (human.getSelected() == SCISSORS && bot.getChoice() == PAPER)
+            (alegere_jucator == ROCK && alegere_calculator == SCISSORS) ||
+            (alegere_jucator == PAPER && alegere_calculator == ROCK) ||
+            (alegere_jucator == SCISSORS && alegere_calculator == PAPER)
             ) {
-            std::cout << "Rezultat: Ai câștigat!\n";
+            std::cout << "Ai câștigat!\n";
         }
+        // Dacă nu e egalitate și nu e câștig, e pierdere
         else {
-            std::cout << "Rezultat: Calculatorul a câștigat!\n";
+            std::cout << "Calculatorul a câștigat!\n";
         }
-
-        std::cout << std::endl;
-    }
-
-private:
-    static std::string choiceToString(Choice c) {
-        switch (c) {
-        case ROCK: return "Piatra";
-        case PAPER: return "Hartie";
-        case SCISSORS: return "Foarfeca";
-        default: return "Necunoscut";
-        }
+        std::cout << "\n"; // Adăugăm o linie nouă pentru aspect
     }
 };
