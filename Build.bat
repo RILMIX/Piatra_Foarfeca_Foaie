@@ -1,21 +1,36 @@
 ﻿@echo off
+REM Setează codepage-ul la UTF-8 pentru mesaje în limba română
 chcp 65001 > nul
-set CXX=cl.exe
-set CXXFLAGS=/EHsc /W4 /MD
+
+REM === PASUL 1: Configurarea Mediului Visual Studio ===
+REM Setează variabilele de mediu necesare (cl.exe, lib.exe etc.) pentru x64.
+call "%ProgramFiles(x86)%\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build\vcvars64.bat"
+
 set OUT_EXE=joc_rps.exe
-set "OBJS=player.obj computer.obj engine.obj main.obj"
+set CXXFLAGS=/EHsc
 
-echo === Incepere Compilare C++ (cl.exe) ===
+echo === Incepere Compilare si Creare .lib ===
 
-:: Compilare fisiere obiect
-%CXX% /c player.cpp /Foplayer.obj %CXXFLAGS% || goto fail
-%CXX% /c computer.cpp /Focomputer.obj %CXXFLAGS% || goto fail
-%CXX% /c engine.cpp /Foengine.obj %CXXFLAGS% || goto fail
-%CXX% /c main.cpp /Fomain.obj %CXXFLAGS% || goto fail
+REM Compilare si creare player.lib
+cl /c player.cpp %CXXFLAGS% || goto fail
+lib /OUT:player.lib player.obj || goto fail
 
-:: Legare
-echo Legare...
-%CXX% %OBJS% /Fe%OUT_EXE% || goto fail
+REM Compilare si creare computer.lib
+cl /c computer.cpp %CXXFLAGS% || goto fail
+lib /OUT:computer.lib computer.obj || goto fail
+
+REM Compilare si creare engine.lib
+cl /c engine.cpp %CXXFLAGS% || goto fail
+lib /OUT:engine.lib engine.obj || goto fail
+
+REM === PASUL 2: Compilarea Modulului Principal ===
+echo Compilare main.cpp...
+cl /c main.cpp %CXXFLAGS% /Fomain.obj || goto fail
+
+REM === PASUL 3: Legarea Executabilului (Folosind cl.exe pentru link) ===
+echo Legare finala...
+REM cl.exe leagă obiectul principal cu bibliotecile statice
+cl main.obj player.lib computer.lib engine.lib /Fe%OUT_EXE% || goto fail
 
 :success
 echo.

@@ -6,17 +6,25 @@
 #include "Computer.hpp"
 #include "Engine.hpp"
 
+//comment
+
 int main() {
+    // Inițializează generatorul de numere aleatoare. Esențial pentru Computer.
     std::srand(std::time(nullptr));
 
-    Player human;
-    Computer bot;
-    Engine joc(human, bot);
+    // Creează instanțele principale
+    Player player;
+    Computer computer;
 
-    joc.run();
+    // Inițializează motorul jocului cu referințe la player și computer
+    Engine engine(player, computer);
 
-    Player::showSTLDemos();
-    Player::showSmartPointers();
+    // Rulează o rundă de joc
+    engine.run();
+
+    // Adaugă funcționalitățile extra din codul prietenului:
+    Player::demoSTLContainerAndAlgorithms(); // Demonstrație STL
+    Player::demoSmartPointers(); // Demonstrație Smart Pointers
 
     return 0;
 }
