@@ -1,27 +1,16 @@
 ﻿#include "Player.hpp"
-#include <limits>
 #include <iostream>
-#include <vector>
-#include <algorithm>
-#include <memory>
-#include <string> // Adăugată, deși putea fi în .hpp, e utilă pentru operații cu string
+#include <limits>
+#include <string>
 
-// --- CONSTRUCTORI ȘI OPERATORI ---
+// --- CONSTRUCTORS AND OPERATORS ---
 
-// Constructor implicit (fără nume, Piatra ca alegere implicită)
-Player::Player() : name("Anonim"), choice(ROCK) {}
+Player::Player() : name(""), choice(Choice::ROCK) {}
 
-// Constructor cu parametri
-Player::Player(const std::string& nume, Choice alegere)
-    : name(nume), choice(alegere) {
-}
+Player::Player(const std::string& name, Choice choice) : name(name), choice(choice) {}
 
-// Constructor de copiere
-Player::Player(const Player& other)
-    : name(other.name), choice(other.choice) {
-}
+Player::Player(const Player& other) : name(other.name), choice(other.choice) {}
 
-// Operator de atribuire (Assignment Operator)
 Player& Player::operator=(const Player& other) {
     if (this != &other) {
         name = other.name;
@@ -30,32 +19,84 @@ Player& Player::operator=(const Player& other) {
     return *this;
 }
 
-// Operator de egalitate (necesar pentru find_if)
 bool Player::operator==(const Player& other) const {
     return name == other.name && choice == other.choice;
 }
 
-// Operator de inegalitate
 bool Player::operator!=(const Player& other) const {
     return !(*this == other);
 }
 
-// Operator "mai mic" (necesar pentru std::sort)
 bool Player::operator<(const Player& other) const {
-    // Sortează în primul rând după nume. Dacă numele sunt egale, sortează după alegere.
-    return name < other.name ||
-        (name == other.name && static_cast<int>(choice) < static_cast<int>(other.choice));
+    return name < other.name || (name == other.name && static_cast<int>(choice) < static_cast<int>(other.choice));
 }
 
-// Operator "mai mare"
 bool Player::operator>(const Player& other) const {
     return other < *this;
 }
 
-// --- FLUXURI I/O (std::istream și std::ostream) ---
+// --- I/O STREAM OPERATORS ---
 
-// Operator de citire (folosit pentru cin >> player)
+// Operator for reading Player data from istream
 std::istream& operator>>(std::istream& is, Player& player) {
-    std::cout << "Introdu numele jucatorului: ";
-    // Folosim is >> player.name, nu cin, pentru a fi generic
-    if
+    std::cout << "Enter player name: ";
+    if (!(is >> player.name)) return is;
+
+    int input;
+    do {
+        std::cout << "Enter 0 (Rock), 1 (Paper), or 2 (Scissors): ";
+        is >> input;
+
+        if (is.fail() || !(input >= 0 && input <= 2)) {
+            is.clear();
+            is.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            std::cout << "Invalid input. Please try again." << std::endl;
+        }
+        else {
+            player.choice = static_cast<Choice>(input);
+            break;
+        }
+    } while (true);
+
+    return is;
+}
+
+// Operator for writing Player data to ostream
+std::ostream& operator<<(std::ostream& os, const Player& player) {
+    os << "Player: " << player.name << ", Choice: ";
+    switch (player.choice) {
+    case Choice::ROCK: os << "Rock"; break;
+    case Choice::PAPER: os << "Paper"; break;
+    case Choice::SCISSORS: os << "Scissors"; break;
+    }
+    return os;
+}
+
+// --- CORE GAME METHODS ---
+
+// Allows the player to input their choice
+void Player::makeChoice() {
+    int input;
+    do {
+        std::cout << "Enter 0 (Rock), 1 (Paper), or 2 (Scissors): ";
+        std::cin >> input;
+
+        if (std::cin.fail() || !(input >= 0 && input <= 2)) {
+            std::cin.clear();
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            std::cout << "Invalid input. Please try again." << std::endl;
+        }
+        else {
+            choice = static_cast<Choice>(input);
+            break;
+        }
+    } while (true);
+}
+
+// Returns the player's current choice
+Choice Player::getChoice() const {
+    return choice;
+}
+
+// Note: Static demo functions (demoSTLContainerAndAlgorithms/demoSmartPointers) 
+// have been removed to strictly match the provided friend's implementation file.

@@ -22,9 +22,7 @@ int main() {
     // Rulează o rundă de joc
     engine.run();
 
-    // Adaugă funcționalitățile extra din codul prietenului:
-    Player::demoSTLContainerAndAlgorithms(); // Demonstrație STL
-    Player::demoSmartPointers(); // Demonstrație Smart Pointers
+    // S-au eliminat apelurile Player::demo... pentru a repeta funcționarea exactă a prietenului.
 
     return 0;
 }
