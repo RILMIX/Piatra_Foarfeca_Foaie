@@ -40,4 +40,9 @@
 # debug information files
 *.dwo
 
-.vs
+*.o, rps.exe
+
+# ignore builds
+build/
+out/
+.vs/

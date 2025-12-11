@@ -1,57 +1,45 @@
 ﻿#pragma once
 
 #include <iostream>
-// Nu mai avem nevoie de <string> aici, deci o eliminăm pentru simplitate
 #include "Player.hpp"
 #include "Computer.hpp"
-#include "Choice.hpp" // Presupunem că enum-ul Choice este definit aici
+#include "Choice.hpp" 
+// Notă: Nu mai este nevoie de lungile switch-uri de afișare datorită operatorului << din Choice.hpp!
 
-// Această clasă gestionează logica jocului (cine alege, cine câștigă)
 class Engine {
 private:
-    // Folosim nume simple, directe, pentru a simplifica codul
-    Player& p_jucator;
-    Computer& c_calculator;
+    // Păstrăm denumirile simple ale prietenului pentru simplitate
+    Player& player;
+    Computer& computer;
 
 public:
-    // Constructorul primește referințele la jucător și calculator
-    Engine(Player& p, Computer& c) : p_jucator(p), c_calculator(c) {}
+    // Constructor
+    Engine(Player& p, Computer& c) : player(p), computer(c) {}
 
     // Funcția principală care rulează o rundă de joc
     void run() {
-        // 1. Jucătorii aleg
-        p_jucator.makeChoice(); // Am schimbat în 'makeChoice' pentru a fi consistent cu prietenul tău
-        c_calculator.generateChoice(); // Am schimbat în 'generateChoice' pentru a fi consistent cu prietenul tău
+        // 1. Jucătorii aleg (Uniformizat la makeChoice() și pentru Computer)
+        player.makeChoice();
+        computer.makeChoice(); // Atenție: presupunem că Computer are acum makeChoice()
 
-        // Obținem alegerile pentru a le compara
-        Choice alegere_jucator = p_jucator.getChoice(); // Presupunem că metoda de citire este getChoice()
-        Choice alegere_calculator = c_calculator.getChoice(); // Presupunem că metoda de citire este getChoice()
+        // Obținem alegerile (Folosim direct denumirile prietenului)
+        Choice player_choice = player.getChoice();
+        Choice computer_choice = computer.getChoice();
 
-        // 2. Afișăm alegerile
-        std::cout << "Tu ai ales ";
-        switch (alegere_jucator) {
-        case ROCK: std::cout << "Piatra"; break;
-        case PAPER: std::cout << "Hartie"; break;
-        case SCISSORS: std::cout << "Foarfeca"; break;
-        }
-
-        std::cout << ", Calculatorul a ales ";
-        switch (alegere_calculator) {
-        case ROCK: std::cout << "Piatra"; break;
-        case PAPER: std::cout << "Hartie"; break;
-        case SCISSORS: std::cout << "Foarfeca"; break;
-        }
+        // 2. Afișăm alegerile într-un format simplificat și elegant, folosind operatorul <<
+        std::cout << "Tu ai ales " << player_choice;
+        std::cout << ", Calculatorul a ales " << computer_choice;
         std::cout << " - ";
 
         // 3. Determinăm rezultatul (Logică Rock, Paper, Scissors)
-        if (alegere_jucator == alegere_calculator) {
+        if (player_choice == computer_choice) {
             std::cout << "Egalitate!\n";
         }
         // Verificăm condițiile de câștig pentru Jucător
         else if (
-            (alegere_jucator == ROCK && alegere_calculator == SCISSORS) ||
-            (alegere_jucator == PAPER && alegere_calculator == ROCK) ||
-            (alegere_jucator == SCISSORS && alegere_calculator == PAPER)
+            (player_choice == Choice::ROCK && computer_choice == Choice::SCISSORS) ||
+            (player_choice == Choice::PAPER && computer_choice == Choice::ROCK) ||
+            (player_choice == Choice::SCISSORS && computer_choice == Choice::PAPER)
             ) {
             std::cout << "Ai câștigat!\n";
         }
@@ -59,6 +47,6 @@ public:
         else {
             std::cout << "Calculatorul a câștigat!\n";
         }
-        std::cout << "\n"; // Adăugăm o linie nouă pentru aspect
+        std::cout << "\n";
     }
 };
