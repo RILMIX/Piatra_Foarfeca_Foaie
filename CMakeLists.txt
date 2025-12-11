@@ -3,10 +3,12 @@ project(RPS)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
-#include_directories(include) # Calea către fișierele header
-#link_directories(lib)        # Calea către bibliotecile externe (folosește doar dacă este necesar)
+# compile AsciiRenderer.cpp as a separate library
+add_library(AsciiRenderer AsciiRenderer.cpp "test.cpp")
 
-file(GLOB SOURCES "*.cpp") # Colectează automat toate fișierele .cpp din src
-add_executable(app ${SOURCES})
+set(SOURCES Choice.cpp Computer.cpp Engine.cpp HumanPlayer.cpp Main.cpp
+)
 
-#target_link_libraries(app love math) # Leagă bibliotecile
+add_executable(app ${SOURCES} "test.cpp")
+
+target_link_libraries(app AsciiRenderer)

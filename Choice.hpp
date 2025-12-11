@@ -1,12 +1,18 @@
 #pragma once
 
-#include <iostream>
+#include "Choice.hpp"
+#include "Player.hpp"
+#include <random>
 
-enum class Choice 
-{ 
-	Rock = 0, 
-	Paper = 1, 
-	Scissors = 2 
+class Computer : public Player
+{
+private:
+    Choice generatedChoice = Choice::Rock;
+
+public:
+    Computer() = default;
+
+    void generateMove();
+
+    Choice getMove() const;
 };
-
-std::ostream& operator <<(std::ostream& os, const Choice& choice);
