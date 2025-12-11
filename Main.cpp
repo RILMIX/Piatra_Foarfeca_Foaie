@@ -1,28 +1,24 @@
 ﻿#include <iostream>
 #include <cstdlib>
 #include <ctime>
+
 #include "Choice.hpp"
 #include "Player.hpp"
 #include "Computer.hpp"
 #include "Engine.hpp"
 
-//comment
-
 int main() {
-    // Inițializează generatorul de numere aleatoare. Esențial pentru Computer.
+    // Inițializează generatorul de numere aleatoare
     std::srand(std::time(nullptr));
 
-    // Creează instanțele principale
-    Player player;
-    Computer computer;
+    // Versiunea ta, dar echivalenta funcțional cu prietenul:
+    std::unique_ptr<Player> player = std::make_unique<Player>();
+    std::unique_ptr<Computer> computer = std::make_unique<Computer>();
 
-    // Inițializează motorul jocului cu referințe la player și computer
-    Engine engine(player, computer);
+    // Engine primește unique_ptr pentru a permite polimorfism și arhitectura corectă
+    Engine engine(std::move(player), std::move(computer));
 
-    // Rulează o rundă de joc
     engine.run();
-
-    // S-au eliminat apelurile Player::demo... pentru a repeta funcționarea exactă a prietenului.
 
     return 0;
 }

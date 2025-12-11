@@ -2,38 +2,51 @@
 
 #include <iostream>
 #include <string>
-#include <memory>    // Pentru demo Smart Pointers
-#include <vector>    // Pentru demo STL
-#include <algorithm> // Pentru demo STL
-#include "Choice.hpp" // Definiția pentru enum class Choice
+#include <algorithm>
+#include <vector>
+#include <memory>
+#include "Choice.hpp"
 
 class Player {
 public:
-    // Preluat de la prieten: variabila este 'choice' și este publică.
     std::string name;
     Choice choice;
 
-    // --- Constructorii și Operatorii ---
-    Player();
-    Player(const std::string& name, Choice choice);
-    Player(const Player& other);
-    Player& operator=(const Player& other);
+    Player(const std::string& n = "Unknown", Choice c = Choice::None)
+        : name(n), choice(c) {
+    }
 
-    // Operatori de comparație (necesari pentru sortare/căutare STL)
-    bool operator==(const Player& other) const;
-    bool operator!=(const Player& other) const;
-    bool operator<(const Player& other) const;
-    bool operator>(const Player& other) const;
+    bool operator==(const Player& o) const { return name == o.name && choice == o.choice; }
+    bool operator!=(const Player& o) const { return !(*this == o); }
+    bool operator<(const Player& o)  const { return name < o.name; }
+    bool operator>(const Player& o)  const { return name > o.name; }
 
-    // Operatori I/O (prieteni)
-    friend std::istream& operator>>(std::istream& is, Player& player);
-    friend std::ostream& operator<<(std::ostream& os, const Player& player);
+    friend std::istream& operator>>(std::istream& is, Player& p) {
+        std::cout << "Name: ";
+        is >> p.name;
+        std::cout << "Choice (0/1/2): ";
+        int c; is >> c;
+        p.choice = static_cast<Choice>(c);
+        return is;
+    }
 
-    // --- Metode de Joc (Preluat de la prieten) ---
-    void makeChoice(); // Metodă pentru a face alegerea
-    Choice getChoice() const; // Metodă pentru a returna alegerea
+    friend std::ostream& operator<<(std::ostream& os, const Player& p) {
+        return os << "Player: " << p.name << " | Choice: " << (int)p.choice;
+    }
+    virtual void makeChoice() = 0;
+    virtual Choice getChoice() const = 0;
 
-    // --- Funcții Statice pentru Demonstrații (Preluat din codul dumneavoastră și redenumite) ---
-    static void demoSTLContainerAndAlgorithms();
-    static void demoSmartPointers();
+    static void demoSTLContainer() {
+        std::vector<int> v = { 5,2,4,1 };
+        std::sort(v.begin(), v.end());
+        for (int x : v) std::cout << x << " ";
+        std::cout << "\n";
+    }
+
+    static void demoSmartPtr() {
+        auto ptr = std::make_shared<int>(10);
+        std::cout << "SmartPtr: " << *ptr << "\n";
+    }
+
+    virtual ~Player() = default;
 };

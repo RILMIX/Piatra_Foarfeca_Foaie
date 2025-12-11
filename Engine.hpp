@@ -3,50 +3,88 @@
 #include <iostream>
 #include "Player.hpp"
 #include "Computer.hpp"
-#include "Choice.hpp" 
-// Notă: Nu mai este nevoie de lungile switch-uri de afișare datorită operatorului << din Choice.hpp!
+#include "Choice.hpp"
 
 class Engine {
 private:
-    // Păstrăm denumirile simple ale prietenului pentru simplitate
     Player& player;
     Computer& computer;
 
+    int roundsPlayed = 0;
+    int playerWins = 0;
+    int computerWins = 0;
+    int ties = 0;
+
 public:
-    // Constructor
     Engine(Player& p, Computer& c) : player(p), computer(c) {}
 
-    // Funcția principală care rulează o rundă de joc
-    void run() {
-        // 1. Jucătorii aleg (Uniformizat la makeChoice() și pentru Computer)
-        player.makeChoice();
-        computer.makeChoice(); // Atenție: presupunem că Computer are acum makeChoice()
+    void run()
+    {
+        Init();
 
-        // Obținem alegerile (Folosim direct denumirile prietenului)
+        while (true)
+        {
+            CurrentResult();   
+            MakeChoices();     
+            DisplayChoices();  
+            DetermineResult(); 
+        }
+    }
+
+private:
+
+
+    void Init() {
+        std::cout << "Welcome to Rock-Paper-Scissors!\n";
+        std::cout << "Enter 0 (Rock), 1 (Paper), or 2 (Scissors).\n";
+        std::cout << "Exit with Ctrl+C\n";
+        std::cout << "-------------------------\n";
+    }
+
+    void MakeChoices() {
+        player.makeChoice();
+        computer.makeChoice();
+    }
+
+    void DisplayChoices() {
         Choice player_choice = player.getChoice();
         Choice computer_choice = computer.getChoice();
 
-        // 2. Afișăm alegerile într-un format simplificat și elegant, folosind operatorul <<
-        std::cout << "Tu ai ales " << player_choice;
-        std::cout << ", Calculatorul a ales " << computer_choice;
-        std::cout << " - ";
+        std::cout << "Tu ai ales " << player_choice
+            << ", Calculatorul a ales " << computer_choice
+            << " - ";
+    }
 
-        // 3. Determinăm rezultatul (Logică Rock, Paper, Scissors)
-        if (player_choice == computer_choice) {
+    void DetermineResult() {
+        ++roundsPlayed;
+
+        Choice p = player.getChoice();
+        Choice c = computer.getChoice();
+
+        if (p == c) {
             std::cout << "Egalitate!\n";
+            ++ties;
         }
-        // Verificăm condițiile de câștig pentru Jucător
         else if (
-            (player_choice == Choice::ROCK && computer_choice == Choice::SCISSORS) ||
-            (player_choice == Choice::PAPER && computer_choice == Choice::ROCK) ||
-            (player_choice == Choice::SCISSORS && computer_choice == Choice::PAPER)
+            (p == Choice::Rock && c == Choice::Scissors) ||
+            (p == Choice::Paper && c == Choice::Rock) ||
+            (p == Choice::Scissors && c == Choice::Paper)
             ) {
-            std::cout << "Ai câștigat!\n";
+            std::cout << "Ai castigat!\n";
+            ++playerWins;
         }
-        // Dacă nu e egalitate și nu e câștig, e pierdere
         else {
-            std::cout << "Calculatorul a câștigat!\n";
+            std::cout << "Calculatorul a castigat!\n";
+            ++computerWins;
         }
-        std::cout << "\n";
+    }
+
+    void CurrentResult() {
+        std::cout << "\n--- Scor Curent ---\n";
+        std::cout << "Runde jucate: " << roundsPlayed << "\n";
+        std::cout << "Victoriile tale: " << playerWins << "\n";
+        std::cout << "Victorii Calculator: " << computerWins << "\n";
+        std::cout << "Egalitati: " << ties << "\n";
+        std::cout << "--------------------\n";
     }
 };
